@@ -2,6 +2,8 @@ package Blanche;// -*- coding: utf-8 -*-
 
 import java.util.ArrayList;
 
+import static java.lang.Thread.sleep;
+
 public class SeptNains {
     public static void main(String[] args) {
         int nbNains = 7;
@@ -9,10 +11,19 @@ public class SeptNains {
         Nain nain [] = new Nain [nbNains];
         for(int i = 0; i < nbNains; i++) nain[i] = new Nain(nom[i]);
         for(int i = 0; i < nbNains; i++) nain[i].start();
+        try {
+            sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        for(int i=0; i < nbNains; i++){
+            System.out.println("interupting : " +nom[i]);
+            nain[i].interrupt();
+        }
         for(int i = 0; i < nbNains; i++) {
             try { nain[i].join(); } catch (InterruptedException e) {e.printStackTrace();}	
         }
-        // System.out.println("C'est fini.");        
+        System.out.println("Fin");
     }
 }    
 
@@ -24,15 +35,23 @@ class Nain extends Thread {
         this.setName(nom);
     }
     public void run() {
-        while(true) {
+        while (true) {
             bn.requérir();
-            bn.accéder();
-            System.out.println("\t\t" + getName() + " possède le privilège d'accès à Blanche-Neige.");
-            try {sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
+            try {
+                bn.accéder();
+                System.out.println("\t\t" + getName() + " possède le privilège d'accès à Blanche-Neige.");
+                sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println("\t\t" + getName() + " Au revoir");
+                return;
+            }
             bn.relâcher();
         }
+
+
         // System.out.println(getName() + " a terminé!");
-    }	
+    }
+
 }
 
 /*
