@@ -11,9 +11,10 @@ public class BlancheNeige {
         file_attente.add(Thread.currentThread());
     }
 
-    public synchronized void accéder () {
+    public synchronized void accéder () throws InterruptedException {
         while( ! libre || !Thread.currentThread().equals(file_attente.element())) { // Le nain s'endort sur l'objet bn
-            try { wait(); } catch (InterruptedException e) {e.printStackTrace();}
+            wait();
+
         }
         libre = false;
         System.out.println("\t\t" + Thread.currentThread().getName()
